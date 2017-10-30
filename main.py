@@ -10,53 +10,49 @@ app.secret_key = 'dgfstGsfS'
 
 class Blog(db.Model):
 
-    id = db.Column(db.Integer, primary_key = True)
-    title = db.Column(db.String(100))
-    body = db.Column(db.Text(2000))
+    blog_id = db.Column(db.Integer, primary_key=True)
+    blog_title = db.Column(db.String(120))
+    blog_content = db.Column(db.String(120))
 
-    def __init__(self, title, body):
-        self.title = title
-        self.body = body
+    def __init__(self, blog_title, blog_content):
+        self.blog_title = blog_title
+        self.blog_content = blog_content
 
-@app.route('/')
+@app.route('/blog', methods=['POST', 'GET'])
 def index():
-    blogs = Blog.query.all()
-    return render_template('blog.html', blogs=blogs)
-
-@app.route('/blog')
-def blog():
 
     if request.args:
-        id = request.args.get('id')
-        blog = Blog.query.get(id)
-        return render_template('post.html', blog=blog, id=id)
+        blog_id = request.args.get('id')
+        post = Blog.query.get(blog_id)
 
-    else:
-        blogs = Blog.query.all()
-        return render_template('blog.html', blogs=blogs) 
-
-@app.route('/newpost', methods=['POST', 'GET'])
-def new_post():
+        return render_template('post.html', post=post)
     
-    if request.method == 'GET':
-        return render_template('newpost.html')
-
     if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
+        blog_title = request.form['entry_title']
+        blog_content = request.form['entry_content']
 
-        if len(title) == 0 or len(body) == 0:
-            flash('Please fill in both title and body', 'error')
-            return redirect('newpost')
+        if not blog_title or not blog_content:
+            flash('Please fill in both fields', 'error')
+            return render_template('newpost.html')
+        else:
+            new_post = Blog(blog_title, blog_content)
         
-        if len(title) > 0 and len(body) > 0:
-            new_post = Blog(title, body)
             db.session.add(new_post)
             db.session.commit()
-            return redirect('/blog?id=' + str(new_post.id))
-       
-    #return render_template('single_post.html', blog=blog)
 
+            new_post.id = Blog.query.filter_by(blog_title=blog_title).first()
+
+            
+            return redirect('/blog?id=' + str(new_post.id))
+
+    posts = Blog.query.all()
+    return render_template('blog.html', posts=posts)
+
+@app.route('/newpost', methods=['POST', 'GET'])
+def newpost():
+
+    return render_template('newpost.html')
 
 if __name__ == '__main__':
     app.run()
+
