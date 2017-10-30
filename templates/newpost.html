@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 style = "text-align:center">Add a Blog Entry</h1>
+<h1 style = "text-align:center">Add a New Memory or just tell me something</h1>
     <form action="/blog" method="post">
-        <label for="entry_title">Blog Entry Title:</label><br>
-        <input name="entry_title" type="text"><br><br>
-        <label for="entry_content">Blog Entry Content:</label><br>
-        <textarea name="entry_content" rows="5"></textarea><br><br>
+        <label for="blog_entry_title">Title to the story:</label><br>
+        <input name="blog_entry_title" type="text"><br><br>
+        <label for="blog_entry_content">The Story:</label><br>
+        <textarea name="blog_entry_content" rows="5"></textarea><br><br>
         <input type="submit" value="Add Entry"><br>
     </form>
 {% endblock %}

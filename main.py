@@ -24,15 +24,14 @@ def index():
     if request.args:
         blog_id = request.args.get('id')
         post = Blog.query.get(blog_id)
-
         return render_template('post.html', post=post)
     
     if request.method == 'POST':
-        blog_title = request.form['entry_title']
-        blog_content = request.form['entry_content']
+        blog_title = request.form['blog_entry_title']
+        blog_content = request.form['blog_entry_content']
 
         if not blog_title or not blog_content:
-            flash('Please fill in both fields', 'error')
+            flash('Please fill in', 'its wrong')
             return render_template('newpost.html')
         else:
             new_post = Blog(blog_title, blog_content)
@@ -40,10 +39,10 @@ def index():
             db.session.add(new_post)
             db.session.commit()
 
-            new_post.id = Blog.query.filter_by(blog_title=blog_title).first()
+            new_post = Blog.query.filter_by(blog_title=blog_title).first()
 
             
-            return redirect('/blog?id=' + str(new_post.id))
+            return redirect('/blog?id=' + str(new_post.blog_id))
 
     posts = Blog.query.all()
     return render_template('blog.html', posts=posts)

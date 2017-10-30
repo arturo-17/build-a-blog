@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 style = "text-align:center">{{post.blog_title}}</h1>
-    <p>{{post.blog_content}}</p>
+<h2><a href='/blog?id={{post.blog_id}}'>
+		{{post.blog_title}}</a></h2>
+        <p>{{post.blog_content}}</p>
+
 {% endblock %}
+
+
+
